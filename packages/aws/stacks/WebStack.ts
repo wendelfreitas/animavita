@@ -5,32 +5,54 @@ import * as Cloudfront from '@aws-cdk/aws-cloudfront';
 import * as Route53 from '@aws-cdk/aws-route53';
 import * as Route53Targets from '@aws-cdk/aws-route53-targets';
 
-import {ModeStack} from '../helpers';
+import {ModeStack, getEnvironmentVariables} from '../helpers';
 
 export class WebStack extends ModeStack {
   public readonly domainName = 'animavita.site';
-  public readonly hostedZoneId: string = this.node.tryGetContext('hostedZoneId');
-  public readonly certificateArn: string = this.node.tryGetContext('certificateArn');
+  public readonly secretArn: string = this.node.tryGetContext('secretArn');
 
   constructor(app: CDK.App, id: string) {
     super(app, id);
 
+    /**
+     * Environment
+     */
+
+    const environment = getEnvironmentVariables(this, this.secretArn, [
+      'NODE_ENV',
+      'ANIMAVITA_ENV',
+      'HOSTED_ZONE_ID',
+      'CERTIFICATE_ARN',
+    ]);
+
+    /**
+     * Bucket
+     */
+
     const bucket = new S3.Bucket(this, 'AnimavitaWebPublicBucket', {
-      bucketName: `animavita-${this.mode}-public`,
+      bucketName: this.mode === 'production' ? this.domainName : `${this.mode}.${this.domainName}`,
       publicReadAccess: true,
       websiteIndexDocument: 'index.html',
     });
+
+    /**
+     * Deploy
+     */
 
     new S3Deployment.BucketDeployment(this, 'AnimavitaWebDeploy', {
       sources: [S3Deployment.Source.asset('../expo/web-build')],
       destinationBucket: bucket,
     });
 
+    /**
+     * CDN
+     */
+
     const viewerCertificate = Cloudfront.ViewerCertificate.fromAcmCertificate(
       {
         stack: this,
         node: this.node,
-        certificateArn: this.certificateArn,
+        certificateArn: environment['CERTIFICATE_ARN'],
       },
       {
         aliases: [this.domainName, `www.${this.domainName}`],
@@ -73,9 +95,13 @@ export class WebStack extends ModeStack {
       ],
     });
 
+    /**
+     * DNS
+     */
+
     const hostedZone = Route53.HostedZone.fromHostedZoneAttributes(this, 'AnimavitaHostedZone', {
       zoneName: this.domainName,
-      hostedZoneId: this.hostedZoneId,
+      hostedZoneId: environment['HOSTED_ZONE_ID'],
     });
 
     new Route53.ARecord(this, 'AnimavitaWebAlias', {

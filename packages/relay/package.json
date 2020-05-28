@@ -10,7 +10,7 @@
   "dependencies": {
     "expo-constants": "~8.0.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.1.tar.gz",
-    "react-relay": "^0.0.0-experimental-8cc94ddc",
+    "react-relay": "0.0.0-experimental-8cc94ddc",
     "relay-runtime": "^8.0.0"
   },
   "devDependencies": {

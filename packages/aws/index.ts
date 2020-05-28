@@ -3,13 +3,36 @@ import * as CDK from '@aws-cdk/core';
 import {GraphQLStack} from './stacks/GraphQLStack';
 import {WebStack} from './stacks/WebStack';
 
-const app = new CDK.App();
+const PACKAGES = {
+  GRAPHQL: 'graphql',
+  WEB: 'web',
+};
+const allowedPackages = Object.values(PACKAGES);
 
-const mode = app.node.tryGetContext('mode')
-  ? app.node.tryGetContext('mode').replace(/^\w/, (c: string) => c.toUpperCase())
-  : 'Development';
+function run() {
+  const app = new CDK.App();
 
-new GraphQLStack(app, `Animavita${mode}GraphQLStack`);
-new WebStack(app, `Animavita${mode}WebStack`);
+  const pkg = app.node.tryGetContext('pkg');
+  if (!pkg || !allowedPackages.includes(pkg)) {
+    throw new Error(`Invalid package "${pkg}"`);
+  }
 
-app.synth();
+  const mode = app.node.tryGetContext('mode')
+    ? app.node.tryGetContext('mode').replace(/^\w/, (c: string) => c.toUpperCase())
+    : 'Development';
+
+  switch (pkg) {
+    case PACKAGES.GRAPHQL:
+      new GraphQLStack(app, `Animavita${mode}GraphQLStack`);
+      break;
+    case PACKAGES.WEB:
+      new WebStack(app, `Animavita${mode}WebStack`);
+      break;
+    default:
+      throw new Error(`Deployment not found for package "${pkg}"`);
+  }
+
+  app.synth();
+}
+
+run();

@@ -4,14 +4,12 @@ yarn workspace @animavita/graphql prepare:build
 
 yarn workspace @animavita/aws deploy AnimavitaStagingGraphQLStack \
   -c mode=staging \
-  -c hostedZoneId=$HOSTED_ZONE_ID \
-  -c certificateArn=$CERTIFICATE_ARN \
-  -c JWT_KEY=$JWT_KEY \
-  -c MONGO_URI=$MONGO_URI \
+  -c pkg=graphql \
+  -c secretArn=$SECRET_ARN \
   --require-approval=never
 
 yarn workspace @animavita/aws deploy AnimavitaStagingWebStack \
   -c mode=staging \
-  -c hostedZoneId=$HOSTED_ZONE_ID \
-  -c certificateArn=$CERTIFICATE_ARN \
+  -c pkg=web \
+  -c secretArn=$SECRET_ARN \
   --require-approval=never

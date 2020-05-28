@@ -14,6 +14,11 @@ export const JWT_KEY = envVar
   .required()
   .asString();
 
+export const ANIMAVITA_ENV = envVar
+  .get('ANIMAVITA_ENV')
+  .required()
+  .asString();
+
 export const AWS_S3_BUCKET_NAME = envVar
   .get('AWS_S3_BUCKET_NAME')
   .required()

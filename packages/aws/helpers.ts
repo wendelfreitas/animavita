@@ -1,5 +1,6 @@
 import * as SSM from '@aws-cdk/aws-ssm';
 import * as CDK from '@aws-cdk/core';
+import * as SecretsManager from '@aws-cdk/aws-secretsmanager';
 
 export const getParam = (scope: CDK.Construct, name: string) => {
   return SSM.StringParameter.valueForStringParameter(scope, name);
@@ -13,4 +14,15 @@ export class ModeStack extends CDK.Stack {
   constructor(scope: CDK.Construct, id: string) {
     super(scope, id);
   }
+}
+
+export function getEnvironmentVariables(stack: CDK.Stack, secretArn: string, variables: string[]) {
+  const environmentSecret = SecretsManager.Secret.fromSecretArn(stack, 'AnimavitaSecrets', secretArn);
+
+  const environment: {[key: string]: string} = {};
+  for (const key of variables) {
+    environment[key] = environmentSecret.secretValueFromJson(key).toString();
+  }
+
+  return environment;
 }

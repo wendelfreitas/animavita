@@ -8,13 +8,12 @@ import * as Route53 from '@aws-cdk/aws-route53';
 import * as Route53Targets from '@aws-cdk/aws-route53-targets';
 import {SqsEventSource} from '@aws-cdk/aws-lambda-event-sources';
 
-import {ModeStack} from '../helpers';
+import {ModeStack, getEnvironmentVariables} from '../helpers';
 
 export class GraphQLStack extends ModeStack {
   public readonly domainName = 'animavita.site';
-  public readonly hostedZoneId: string = this.node.tryGetContext('hostedZoneId');
   public readonly graphqlWhitecard = this.mode === 'production' ? 'graphql' : `graphql-${this.mode}`;
-  public readonly certificateArn: string = this.node.tryGetContext('certificateArn');
+  public readonly secretArn: string = this.node.tryGetContext('secretArn');
 
   constructor(app: CDK.App, id: string) {
     super(app, id);
@@ -24,20 +23,25 @@ export class GraphQLStack extends ModeStack {
      */
 
     const bucket = new S3.Bucket(this, 'AnimavitaGraphQLFileBucket', {
-      bucketName: `animavita-${this.mode}-files`,
+      bucketName: `${this.graphqlWhitecard}.${this.domainName}`,
     });
 
     const standardQueue = new SQS.Queue(this, 'AnimavitaStandardQueue', {
       queueName: `animavita-${this.mode}-standard-queue`,
     });
 
-    const environment = {
-      NODE_ENV: 'production',
-      JWT_KEY: this.node.tryGetContext('JWT_KEY'),
-      MONGO_URI: this.node.tryGetContext('MONGO_URI'),
-      AWS_S3_BUCKET_NAME: bucket.bucketName,
-      AWS_STANDARD_QUEUE_URL: standardQueue.queueUrl,
-    };
+    /**
+     * Environment
+     */
+
+    const environment = getEnvironmentVariables(this, this.secretArn, [
+      'NODE_ENV',
+      'ANIMAVITA_ENV',
+      'JWT_KEY',
+      'MONGO_URI',
+      'HOSTED_ZONE_ID',
+      'CERTIFICATE_ARN',
+    ]);
 
     /**
      * GraphQL
@@ -52,7 +56,11 @@ export class GraphQLStack extends ModeStack {
       timeout: CDK.Duration.seconds(15),
       description: 'Lambda function that runs GraphQL koa server',
       functionName: `animavita-${this.mode}-graphql-function`,
-      environment,
+      environment: {
+        ...environment,
+        AWS_S3_BUCKET_NAME: bucket.bucketName,
+        AWS_STANDARD_QUEUE_URL: standardQueue.queueUrl,
+      },
     });
 
     bucket.grantPut(graphql);
@@ -77,7 +85,7 @@ export class GraphQLStack extends ModeStack {
       domainName: `${this.graphqlWhitecard}.${this.domainName}`,
       endpointType: ApiGateway.EndpointType.REGIONAL,
       certificate: {
-        certificateArn: this.certificateArn,
+        certificateArn: environment['CERTIFICATE_ARN'],
         node: this.node,
         stack: this,
       },
@@ -87,7 +95,7 @@ export class GraphQLStack extends ModeStack {
 
     const hostedZone = Route53.HostedZone.fromHostedZoneAttributes(this, 'AnimavitaHostedZone', {
       zoneName: this.domainName,
-      hostedZoneId: this.hostedZoneId,
+      hostedZoneId: environment['HOSTED_ZONE_ID'],
     });
 
     new Route53.ARecord(this, 'AnimavitaGraphQLAlias', {
