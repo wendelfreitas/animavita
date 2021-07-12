@@ -18,6 +18,7 @@ const StyledTheme: DefaultTheme = {
   greyDark: '#717171',
   greyLight: '#D8D8D8',
   greyLighter: '#EBEBEB',
+  red: '#FF0000',
 
   // typography
   sizeLargeTitle: `${heightPercentageToDP('8%')}px`,

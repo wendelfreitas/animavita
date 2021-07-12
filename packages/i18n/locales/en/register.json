@@ -1,0 +1,51 @@
+{
+  "header": "Register Adoption",
+  "form": {
+    "name": {
+      "label": "Animal's name",
+      "placeholder": "Type the animal's name"
+    },
+    "race": {
+      "label": "Animal's race",
+      "placeholder": "Type the animal's race"
+    },
+    "observations": {
+      "label": "Observations",
+      "placeholder": "Additional observations of the animal"
+    }
+  },
+  "buttons": {
+    "animals-type": {
+      "dog": "DOG",
+      "cat": "CAT",
+      "other": "OTHER"
+    },
+    "animals-size": {
+      "small": "SMALL",
+      "medium": "MEDIUM",
+      "large": "LARGE"
+    }
+  },
+  "animal-type": "Animal's type",
+  "animal-age": "Animal's age(approximately)",
+  "year": "year",
+  "years": "years",
+  "animal-sex": "Animal's sex",
+  "animal-sex-placeholder": "Select the animal's sex",
+  "animal-port": "Animal's port",
+  "male": "Male",
+  "female": "Female",
+  "next-step": "Next Step",
+  "label-text": "What about some cute photos of Zeus?",
+  "register-adoption": "Register Adoption",
+  "back-label": "Back to details",
+  "alert": "Please, select at least one image.",
+  "errors": {
+    "name": "The name field is required!",
+    "race": "The race field is required!",
+    "observations": "The observation field is required!",
+    "gender": "It is required to choose the animal's gender!",
+    "animals-size": "It is required to choose the animal's size!",
+    "animals-type": "It is required to choose the animal's type!"
+  }
+}

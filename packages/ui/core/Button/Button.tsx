@@ -2,7 +2,7 @@ import React from 'react';
 import styled, {DefaultTheme, css} from 'styled-components/native';
 import {px2ddp, useTheme, ThemeContextType} from '@animavita/theme';
 import {LinearGradient} from 'expo-linear-gradient';
-import {TouchableOpacityProps} from 'react-native';
+import {ActivityIndicator, TouchableOpacityProps} from 'react-native';
 
 import Typography from '../Typography';
 
@@ -142,6 +142,7 @@ interface ButtonProps extends TouchableOpacityProps {
   disabled?: ButtonDisabled;
   text: ButtonText;
   size: ButtonSize;
+  loading?: boolean;
 }
 
 type ButtonComponentType = React.FC<ButtonProps & {theme: DefaultTheme}>;
@@ -159,7 +160,7 @@ function getColor(
   return theme.styledTheme.greenLight;
 }
 
-const Button: ButtonComponentType = ({text, children, ...props}) => {
+const Button: ButtonComponentType = ({text, children, loading, ...props}) => {
   const {active, gradient, disabled, rounded, outline, size, textColor: color} = props;
   const theme = useTheme();
 
@@ -172,12 +173,12 @@ const Button: ButtonComponentType = ({text, children, ...props}) => {
     if (disabled && (active || gradient)) console.warn("You can't use `gradient` prop when your button is disabled.");
     if (rounded && !outline && !gradient && !active)
       console.warn('To use `rounded` prop you need the `outline`, `gradient` or `active` prop as well.');
-    if (outline && (active || gradient))
-      console.warn("You can't use `outline` prop combined with `gradient` or `active` props.");
     if (children && text) console.warn("You can't use `title` prop combined with `children`. Use only one of both.");
   }
 
   function renderChildren() {
+    if (loading) return <ActivityIndicator size="large" color={theme.styledTheme.white} />;
+
     return children ? (
       children
     ) : (

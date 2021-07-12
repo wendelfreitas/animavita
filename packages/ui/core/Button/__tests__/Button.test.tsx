@@ -86,14 +86,6 @@ describe('Button', () => {
       );
     });
 
-    it('logs outline warn', () => {
-      mountFactory({text: 'Title', size: 'small', outline: true, gradient: true});
-
-      expect(console.warn).toHaveBeenCalledWith(
-        "You can't use `outline` prop combined with `gradient` or `active` props.",
-      );
-    });
-
     it('logs children and title warn', () => {
       mountFactory({text: 'Title', size: 'small', children: <></>});
 

@@ -3,12 +3,17 @@ import {ViewProps} from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 import styled from 'styled-components/native';
 import {FlattenSimpleInterpolation} from 'styled-components';
-import {PossibleThemes, useTheme} from '@animavita/theme';
+import {PossibleThemes, px2ddp, useTheme} from '@animavita/theme';
 
 const ThemedBackground = styled.SafeAreaView<BackgroundProps & {themeName: PossibleThemes}>`
   background-color: ${({themeName, theme}) => (themeName === 'light' ? theme.white : theme.black)};
-  height: 100%;
+  flex: 1;
   ${({css}) => css}
+`;
+
+const Wrapper = styled.View`
+  margin: ${px2ddp(5)}px ${px2ddp(10)}px;
+  flex: 1;
 `;
 
 interface BackgroundProps {
@@ -22,7 +27,7 @@ const Background: React.FC<ViewProps & BackgroundProps> = ({children, css, ...vi
     <>
       <StatusBar style={themeName === 'light' ? 'dark' : 'light'} />
       <ThemedBackground themeName={themeName} css={css} {...viewProps}>
-        {children}
+        <Wrapper>{children}</Wrapper>
       </ThemedBackground>
     </>
   );

@@ -1,0 +1,51 @@
+{
+  "header": "Cadastrar Adoção",
+  "form": {
+    "name": {
+      "label": "Nome do Animal",
+      "placeholder": "Digite o nome do animal"
+    },
+    "race": {
+      "label": "Raça do Animal",
+      "placeholder": "Digite a raça do animal"
+    },
+    "observations": {
+      "label": "Observações",
+      "placeholder": "Observações adicionais sobre o animal"
+    }
+  },
+  "buttons": {
+    "animals-type": {
+      "dog": "CÃO",
+      "cat": "GATO",
+      "other": "OUTRO"
+    },
+    "animals-size": {
+      "small": "PEQUENO",
+      "medium": "MÉDIO",
+      "large": "GRANDE"
+    }
+  },
+  "animal-type": "Tipo de animal",
+  "animal-age": "Idade do animal(aproximadamente)",
+  "year": "ano",
+  "years": "ano",
+  "animal-sex": "Sexo do animal",
+  "animal-sex-placeholder": "Selecione o sexo do animal",
+  "animal-port": "Porte do animal",
+  "male": "Macho",
+  "female": "Fêmea",
+  "next-step": "Próxima Etapa",
+  "label-text": "Que tal umas fotos fofissimas no Zeus?",
+  "register-adoption": "Cadastrar Adoção",
+  "back-label": "Voltar para detalhes",
+  "alert": "Por favor, selecione pelo menos uma imagem.",
+  "errors": {
+    "name": "O campo nome é obrigatório!",
+    "race": "O campo raça é obrigatório!",
+    "observations": "O campo observações é obrigatório!",
+    "gender": "O campo observações é obrigatório!",
+    "animals-size": "Escolha o tamanho do animal!",
+    "animals-type": "É obrigatório escolher um tipo de animal!"
+  }
+}

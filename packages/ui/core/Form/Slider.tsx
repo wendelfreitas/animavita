@@ -15,7 +15,7 @@ interface StyledSliderProps extends SliderProps {
   maximum: number;
   value: number;
   suffix: string;
-  onValueChange(value: number): void;
+  onValueChange: (value: number) => void;
   testID?: string;
 }
 

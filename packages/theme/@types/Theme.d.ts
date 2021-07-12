@@ -11,6 +11,7 @@ declare module 'styled-components/native' {
     greyLight: string;
     greyLighter: string;
     greyDark: string;
+    red: string;
 
     // typography
     sizeLargeTitle: string;
