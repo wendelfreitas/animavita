@@ -4,7 +4,7 @@ import i18n from 'i18n-js';
 import locales from '../locales';
 
 interface I18nContextProps {
-  t: (key: string, options: i18n.TranslateOptions) => string;
+  i18n: typeof i18n;
   setLocale: (locale: string) => void;
   locale: string;
 }
@@ -25,7 +25,7 @@ const I18nProvider: React.FC = ({children}) => {
     i18n.translations = locales;
   }, []);
 
-  return <I18nContext.Provider value={{t: i18n.t, setLocale, locale}}>{children}</I18nContext.Provider>;
+  return <I18nContext.Provider value={{i18n, setLocale, locale}}>{children}</I18nContext.Provider>;
 };
 
 const useI18nController = () => {

@@ -20,7 +20,7 @@ describe('I18n Controller', () => {
       result.current.setLocale('en-US');
     });
 
-    const translation = result.current.t('tab_bar.options.settings', {});
+    const translation = result.current.i18n.t('tab_bar.options.settings', {});
     expect(translation).toEqual('Settings');
   });
 });
