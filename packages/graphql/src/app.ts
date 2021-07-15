@@ -5,21 +5,23 @@ import Koa, {Context} from 'koa';
 import bodyParser from 'koa-bodyparser';
 import convert from 'koa-convert';
 import cors from 'koa-cors';
-import graphqlHttp, {OptionsData} from 'koa-graphql';
+import graphqlHttp from 'koa-graphql';
 import koaLogger from 'koa-logger';
 import Router from '@koa/router';
 
 import * as loaders from './shared/presentation/loaders';
 import {getDataLoaders} from './helper';
-import {KoaContextExt} from './types';
+import {GraphqlHttp, KoaContextExt} from './types';
 import schema from './shared/presentation/schema';
 import {JWT_KEY} from './shared/config';
 import container from './shared/container';
 
 const app = new Koa<any, KoaContextExt>();
+
 if (process.env.NODE_ENV === 'production') {
   app.proxy = true;
 }
+
 app.keys = [JWT_KEY];
 
 const router = new Router<any, KoaContextExt>();
@@ -77,7 +79,7 @@ router.all(
   convert(
     graphqlHttp(
       // @ts-ignore
-      async (request, ctx, koaContext: Context & KoaContextExt): Promise<OptionsData> => {
+      async (request, ctx, koaContext: Context & KoaContextExt): Promise<GraphqlHttp> => {
         const {dataloaders, user} = koaContext;
 
         return {
@@ -108,7 +110,7 @@ router.all(
             }
 
             // eslint-disable-next-line no-console
-            console.error('GraphQL Error', {error});
+            console.error('GraphQL Error', {error: JSON.stringify(error)});
 
             if (process.env.NODE_ENV !== 'production') {
               return {
@@ -130,6 +132,7 @@ router.all(
   ),
 );
 
-app.use(router.routes()).use(router.allowedMethods());
+app.use(router.routes());
+app.use(router.allowedMethods());
 
 export default app;

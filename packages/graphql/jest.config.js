@@ -4,10 +4,10 @@
 module.exports = {
   clearMocks: true,
   collectCoverage: true,
-  collectCoverageFrom: ['<rootDir>/src/modules/**/app/*.ts'],
+  collectCoverageFrom: ['<rootDir>/src/modules/**/app/*.ts', '<rootDir>/src/modules/**/presentation/controllers/*.ts'],
   coverageDirectory: 'coverage',
   coverageReporters: ['text-summary', 'lcov'],
   preset: 'ts-jest',
-  testEnvironment: 'node',
+  testEnvironment: '<rootDir>src/shared/tests/environment.ts',
   testMatch: ['**/*.spec.ts'],
 };
